@@ -1,0 +1,26 @@
+# FROM node:lts-alpine
+FROM node:latest
+
+# ENV NODE_ENV=production
+
+WORKDIR /usr/src/app
+
+# install node_modules
+ADD package.json /usr/src/app/package.json
+
+# COPY ["/sanity-backend/package.json", "/sanity-backend/package-lock.json*", "npm-shrinkwrap.json*", "./"]
+COPY package*.json ./
+# COPY ./package.json ./
+# COPY . /sanity-backend
+
+RUN npm install --production --silent && mv node_modules ../
+RUN npm install -g @sanity/cli
+# copy codebase to docker codebase
+# ADD . /usr/src/app
+
+COPY . .
+EXPOSE 5000
+# RUN chown -R node /usr/src/app
+# RUN npm run build
+# USER node
+CMD ["npm", "start"]
